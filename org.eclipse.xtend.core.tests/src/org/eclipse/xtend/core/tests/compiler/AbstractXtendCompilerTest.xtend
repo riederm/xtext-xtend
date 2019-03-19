@@ -31,7 +31,7 @@ abstract class AbstractXtendCompilerTest extends AbstractXtendTestCase {
 	protected boolean useJavaCompiler = false
 	
 	@Before
-	def setupCompiler() {
+	public def setupCompiler() {
 		compilationTestHelper.javaCompilerClassPath = class.classLoader
 	}
 	
