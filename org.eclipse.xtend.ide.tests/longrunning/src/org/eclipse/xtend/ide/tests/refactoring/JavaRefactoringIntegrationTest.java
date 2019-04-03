@@ -8,26 +8,52 @@
 package org.eclipse.xtend.ide.tests.refactoring;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.xtext.ui.editor.XtextEditor;
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 
 /**
  * @author Jan Koehnlein - Initial contribution and API
  */
 public class JavaRefactoringIntegrationTest extends AbstractXtendRenameRefactoringTest {
-
+	
 	private String[] filesToDelete = new String[0];
 	private boolean waitForBuild = false;
+	
+	@Rule
+	public TestName testName = new TestName();
+	
+	@Before
+	public void cleanupBeforeTests() throws CoreException, InterruptedException {
+		testHelper.closeWelcomePage();
+		System.out.println("testName:" + testName.getMethodName());
+		for (IProject p : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+			System.out.println("project: " + p.getName());
+		}
+		for (IEditorReference r : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
+			System.out.println("open editor: " + r);
+		}
+		IResourcesSetupUtil.cleanWorkspace();
+	}
 
 	@After
 	public void deleteFilesCreatedByTestAndEventuallyWaitForBuild() throws Exception {
+		testHelper.closeAllEditors(false);
 		for (String file : filesToDelete) {
 			try {
 				testHelper.getProject().getFile(file).delete(true, new NullProgressMonitor());
