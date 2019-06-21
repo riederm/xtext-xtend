@@ -9,10 +9,10 @@ package org.eclipse.xtend.core.tests.richstring;
 
 import java.util.List;
 
-import org.eclipse.xtend.core.tests.richstring.CommentInserter;
-import org.eclipse.xtend.core.tests.richstring.RichStringCompilerTest;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 
 import com.google.inject.Inject;
 
@@ -24,18 +24,35 @@ public class RichStringWithCommentCompilerTest extends RichStringCompilerTest {
 	@Inject
 	private CommentInserter commentInserter;
 	
+	@Rule public TestName name = new TestName();
+	
 	@Override
 	public void assertOutput(String expectedOutput, String richString) throws Exception {
+		expectedOutput = shorten(expectedOutput);
+		richString = shorten(richString);
 		List<String> allCandidates = commentInserter.getRichStringWithComments(richString);
+		System.out.println(name.getMethodName() + " " + allCandidates.size());
 		for(String richStringWithComment: allCandidates)
 			super.assertOutput(expectedOutput, richStringWithComment);
 	}
 	
 	@Override
 	public void assertOutput(String expectedOutput, String imports, String richString) throws Exception {
+		expectedOutput = shorten(expectedOutput);
+		richString = shorten(richString);
 		List<String> allCandidates = commentInserter.getRichStringWithComments(richString);
+		System.out.println(name.getMethodName() + " " + allCandidates.size());
 		for(String richStringWithComment: allCandidates)
 			super.assertOutput(expectedOutput, imports, richStringWithComment);
+	}
+	
+	private String shorten(String s) {
+		s = s.replace("foobar", "fb");
+		s = s.replace("zonk", "z");
+		s = s.replace("first", "f");
+		s = s.replace("second", "s");
+		s = s.replace("line", "l");
+		return s;
 	}
 	
 	@Override
