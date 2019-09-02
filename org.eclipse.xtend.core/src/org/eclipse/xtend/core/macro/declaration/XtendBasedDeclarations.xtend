@@ -279,11 +279,6 @@ class XtendMethodDeclarationImpl extends XtendMemberDeclarationImpl<XtendFunctio
 		delegate.final
 	}
 	
-	//TODO declare in interface
-	def isOverride() {
-		delegate.isOverride
-	}
-	
 	override isStatic() {
 		delegate.isStatic
 	}
@@ -336,6 +331,10 @@ class XtendMethodDeclarationImpl extends XtendMemberDeclarationImpl<XtendFunctio
 	
 	override getParameters() {
 		delegate.parameters.map[compilationUnit.toXtendParameterDeclaration(it)]
+	}
+	
+	override getOverriddenOrImplementedMethods() {
+		emptyList
 	}
 	
 }

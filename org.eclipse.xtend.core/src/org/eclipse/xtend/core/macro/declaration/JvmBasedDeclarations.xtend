@@ -1076,10 +1076,6 @@ class JvmMethodDeclarationImpl extends JvmExecutableDeclarationImpl<JvmOperation
 		delegate.isFinal
 	}
 	
-//	override isOverride() {
-//		throw new UnsupportedOperationException("Auto-Jvm function stub")
-//	}
-	
 	override isStatic() {
 		delegate.isStatic
 	}
@@ -1102,6 +1098,13 @@ class JvmMethodDeclarationImpl extends JvmExecutableDeclarationImpl<JvmOperation
 	
 	override getReturnType() {
 		compilationUnit.toTypeReference(delegate.returnType)
+	}
+	
+	override getOverriddenOrImplementedMethods() {
+		val resolvedFeatures = compilationUnit.overrideHelper.getResolvedFeatures(delegate.declaringType)
+		val resolvedOperation = resolvedFeatures.getResolvedOperation(delegate)
+		val overriddenOrImplemented = resolvedOperation.overriddenAndImplementedMethods
+		return overriddenOrImplemented.map[compilationUnit.toMemberDeclaration(it.declaration)].filter(MethodDeclaration)
 	}
 	
 }
